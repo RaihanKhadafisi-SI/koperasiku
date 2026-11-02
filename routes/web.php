@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SimpananController;
 use App\Http\Controllers\UserController;
@@ -45,6 +46,38 @@ Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () 
         ->name('simpanan.verifikasi');
     Route::post('/simpanan/{simpanan}/tolak', [SimpananController::class, 'tolak'])
         ->name('simpanan.tolak');
+});
+
+// Pinjaman: mencatat, mengedit, menghapus pengajuan (petugas)
+Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () {
+    Route::resource('pinjaman', PinjamanController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy'])
+        ->parameters(['pinjaman' => 'pinjaman']);
+});
+
+// Pinjaman: melihat daftar dan detail (petugas)
+Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () {
+    Route::resource('pinjaman', PinjamanController::class)
+        ->only(['index', 'show'])
+        ->parameters(['pinjaman' => 'pinjaman']);
+});
+
+// Pinjaman: persetujuan, penolakan, pembatalan (admin dan pengurus)
+Route::middleware(['auth', 'role:admin,pengurus'])->group(function () {
+    Route::post('/pinjaman/{pinjaman}/approve', [PinjamanController::class, 'approve'])
+        ->name('pinjaman.approve');
+    Route::post('/pinjaman/{pinjaman}/reject', [PinjamanController::class, 'reject'])
+        ->name('pinjaman.reject');
+    Route::post('/pinjaman/{pinjaman}/cancel', [PinjamanController::class, 'cancel'])
+        ->name('pinjaman.cancel');
+});
+
+// Pinjaman: pencairan dan pelunasan (admin dan bendahara)
+Route::middleware(['auth', 'role:admin,bendahara'])->group(function () {
+    Route::post('/pinjaman/{pinjaman}/disburse', [PinjamanController::class, 'disburse'])
+        ->name('pinjaman.disburse');
+    Route::post('/pinjaman/{pinjaman}/paid', [PinjamanController::class, 'markPaid'])
+        ->name('pinjaman.paid');
 });
 
 // Manajemen user: hanya admin
