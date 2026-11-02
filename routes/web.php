@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -18,6 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Data anggota: admin dan pengurus
+Route::middleware(['auth', 'role:admin,pengurus'])->group(function () {
+    Route::resource('anggota', AnggotaController::class)
+        ->parameters(['anggota' => 'anggota']);
 });
 
 // Manajemen user: hanya admin
