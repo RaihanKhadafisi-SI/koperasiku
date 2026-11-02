@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SimpananController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,25 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:admin,pengurus'])->group(function () {
     Route::resource('anggota', AnggotaController::class)
         ->parameters(['anggota' => 'anggota']);
+});
+
+// Simpanan: mencatat, mengedit, membatalkan (admin dan bendahara)
+Route::middleware(['auth', 'role:admin,bendahara'])->group(function () {
+    Route::resource('simpanan', SimpananController::class)
+        ->only(['create', 'store', 'edit', 'update', 'destroy'])
+        ->parameters(['simpanan' => 'simpanan']);
+});
+
+// Simpanan: melihat dan memverifikasi (admin, pengurus, bendahara)
+Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () {
+    Route::resource('simpanan', SimpananController::class)
+        ->only(['index', 'show'])
+        ->parameters(['simpanan' => 'simpanan']);
+
+    Route::post('/simpanan/{simpanan}/verifikasi', [SimpananController::class, 'verifikasi'])
+        ->name('simpanan.verifikasi');
+    Route::post('/simpanan/{simpanan}/tolak', [SimpananController::class, 'tolak'])
+        ->name('simpanan.tolak');
 });
 
 // Manajemen user: hanya admin
