@@ -16,6 +16,9 @@ class User extends Authenticatable
     /**
      * The attributes that are mass assignable.
      *
+     * role dan is_active sengaja TIDAK dimasukkan di sini,
+     * supaya tidak bisa diubah lewat input formulir biasa.
+     *
      * @var list<string>
      */
     protected $fillable = [
@@ -44,6 +47,12 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 }
