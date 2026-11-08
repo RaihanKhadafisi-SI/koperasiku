@@ -73,6 +73,7 @@
                 <ul class="nav nav-pills nav-sidebar flex-column"
                     data-widget="treeview" role="menu" data-accordion="false">
 
+                    {{-- Dashboard --}}
                     <li class="nav-item">
                         <a href="{{ route('dashboard') }}"
                            class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -80,6 +81,9 @@
                             <p>Dashboard</p>
                         </a>
                     </li>
+
+                    {{-- ===== MANAJEMEN KOPERASI ===== --}}
+                    <li class="nav-header">MANAJEMEN KOPERASI</li>
 
                     @if(Route::has('anggota.index'))
                         <li class="nav-item">
@@ -90,6 +94,19 @@
                             </a>
                         </li>
                     @endif
+
+                    @if(auth()->user()?->role === 'admin' && Route::has('users.index'))
+                        <li class="nav-item">
+                            <a href="{{ route('users.index') }}"
+                               class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-cog"></i>
+                                <p>Manajemen User</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- ===== TRANSAKSI KOPERASI ===== --}}
+                    <li class="nav-header">TRANSAKSI KOPERASI</li>
 
                     @if(Route::has('simpanan.index'))
                         <li class="nav-item">
@@ -106,17 +123,30 @@
                             <a href="{{ route('pinjaman.index') }}"
                                class="nav-link {{ request()->routeIs('pinjaman.*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-hand-holding-usd"></i>
-                                <p>Manajemen Pinjaman</p>
+                                <p>Pinjaman</p>
                             </a>
                         </li>
                     @endif
 
-                    @if(auth()->user()?->role === 'admin')
+                    @if(Route::has('angsuran.index'))
                         <li class="nav-item">
-                            <a href="{{ route('users.index') }}"
-                               class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-cog"></i>
-                                <p>Manajemen User</p>
+                            <a href="{{ route('angsuran.index') }}"
+                               class="nav-link {{ request()->routeIs('angsuran.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-money-check-alt"></i>
+                                <p>Angsuran</p>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- ===== LAPORAN ===== --}}
+                    <li class="nav-header">LAPORAN</li>
+
+                    @if(Route::has('laporan.index'))
+                        <li class="nav-item">
+                            <a href="{{ route('laporan.index') }}"
+                               class="nav-link {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-file-alt"></i>
+                                <p>Laporan</p>
                             </a>
                         </li>
                     @endif
