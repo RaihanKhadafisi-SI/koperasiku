@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SimpananController;
@@ -95,6 +96,12 @@ Route::middleware(['auth', 'role:admin,bendahara'])->group(function () {
         ->name('angsuran.generate');
     Route::post('/angsuran/{angsuran}/bayar', [AngsuranController::class, 'bayar'])
         ->name('angsuran.bayar');
+});
+
+// Laporan: melihat rekap (petugas)
+Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () {
+    Route::get('/laporan', [LaporanController::class, 'index'])
+        ->name('laporan.index');
 });
 
 // Manajemen user: hanya admin
