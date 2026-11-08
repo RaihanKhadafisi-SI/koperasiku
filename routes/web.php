@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AngsuranController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\PinjamanController;
 use App\Http\Controllers\ProfileController;
@@ -78,6 +79,22 @@ Route::middleware(['auth', 'role:admin,bendahara'])->group(function () {
         ->name('pinjaman.disburse');
     Route::post('/pinjaman/{pinjaman}/paid', [PinjamanController::class, 'markPaid'])
         ->name('pinjaman.paid');
+});
+
+// Angsuran: melihat daftar dan jadwal (petugas)
+Route::middleware(['auth', 'role:admin,pengurus,bendahara'])->group(function () {
+    Route::get('/angsuran', [AngsuranController::class, 'index'])
+        ->name('angsuran.index');
+    Route::get('/angsuran/pinjaman/{pinjaman}', [AngsuranController::class, 'show'])
+        ->name('angsuran.show');
+});
+
+// Angsuran: membuat jadwal dan mencatat pembayaran (admin dan bendahara)
+Route::middleware(['auth', 'role:admin,bendahara'])->group(function () {
+    Route::post('/angsuran/pinjaman/{pinjaman}/jadwal', [AngsuranController::class, 'generate'])
+        ->name('angsuran.generate');
+    Route::post('/angsuran/{angsuran}/bayar', [AngsuranController::class, 'bayar'])
+        ->name('angsuran.bayar');
 });
 
 // Manajemen user: hanya admin
